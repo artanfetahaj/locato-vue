@@ -56,16 +56,40 @@
             </div>
         </template>
         <v-list>
-            <v-list-item
+            <template
                 v-for="(item, index) in items"
-                :key="index"
-                class="tw-cursor-pointer hover:tw-bg-gray-100"
-                :class="item.separator ? 'tw-border-b tw-border-gray-500' : ''"
-                rounded="lg"
-                @click="item.action"
             >
-            <v-list-item-title>{{ item.title }}</v-list-item-title>
+                <template v-if="item.link">
+                    <NuxtLink :key="index" :to="item.link">
+                        <v-list-item
+                            class="tw-cursor-pointer hover:tw-bg-gray-100"
+                            :class="item.separator ? 'tw-border-b-2 tw-border-gray-200' : ''"
+                            rounded="lg"
+                        >   
+                            <v-list-item-title>
+                                {{ item.title }}
+                            </v-list-item-title>
+                        </v-list-item>
+                    </NuxtLink>
+                </template>
+                
+                
+                <template v-else>
+                    <v-list-item
+                        :key="index"
+                        class="tw-cursor-pointer hover:tw-bg-gray-100"
+                        :class="item.separator ? 'tw-border-b-2 tw-border-gray-200' : ''"
+                        rounded="lg"
+                        @click="item.action"
+                    >   
+                        <v-list-item-title>
+                            {{ item.title }}
+                        </v-list-item-title>
+                    </v-list-item>
+                </template>
             </v-list-item>
+            </template>
+            
         </v-list>
     </v-menu>
 </template>
@@ -99,22 +123,22 @@
             },
             {
                 title: 'Locatie verhuren',
-                action: '/verhuren',
+                link: '/verhuren',
             },
             { 
                 title: 'Hulp',
-                action: '/hulp',
+                link: '/hulp',
             },
         ];
 
         protected authenticatedItems: navigationItem[] = [
             { 
                 title: 'Mijn profiel',
-                action: '/mijn-profiel',
+                link: '/mijn-profiel',
             },
             { 
                 title: 'Favorieten',
-                action: '/mijn-favorieten',
+                link: '/mijn-favorieten',
             },
             { 
                 title: 'Uitloggen',
@@ -124,7 +148,7 @@
             },
             { 
                 title: 'Hulp',
-                action: '/hulp',
+                link: '/hulp',
             },
         ];
 
@@ -139,7 +163,8 @@
 
     type navigationItem = {
         title: string,
-        action: string | Function,
+        action?: Function,
+        link?: string,
         separator?: boolean,
     };
 </script>

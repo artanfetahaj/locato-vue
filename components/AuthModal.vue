@@ -3,6 +3,7 @@
         v-model="show"
         width="500"
         transition="dialog-top-transition"
+        :persistent="true"
     >
         <v-card>
             <v-card-title>
@@ -38,11 +39,11 @@
                         />
                     </template>
                     <template v-if="confirmationSent">
-
+                        {{ successMessage }}
                     </template>
                     <span class="loginError tw-text-error-500">{{error}}</span>
                 </div>
-                <div class="tw-flex tw-flex-wrap tw-w-full">
+                <div class="tw-flex tw-flex-wrap tw-w-full" v-if="!confirmationSent">
                     <div class="tw-w-full tw-flex tw-flex-wrap tw-mt-16 tw-justify-center">
                         <v-btn
                             class="tw-w-full tw-mb-16"

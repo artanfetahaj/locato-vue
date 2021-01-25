@@ -4,3 +4,9 @@
 // $font-size-root: 20px;
 
 $btn-text-transform: none!important;
+
+$grid-breakpoints: (
+  'sm': 0,
+  'md': 767px,
+  'lg': 1023px,
+);
