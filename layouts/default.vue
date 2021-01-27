@@ -6,14 +6,14 @@
       :transparent="showTransparentNav"
     />
     <Nuxt />
-    <AuthModal :visible="authModalVisible" :modalType="authModalType" v-on:close="authModalVisible = false" />
+    <AuthModal :show="$store.getters.showAuthModal" :type="$store.getters.authModalType" />
   </v-app>
 </template>
 
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
   import NavBar from '@/components/NavBar.vue';
-import { modalType } from '@/components/AuthModal.vue';
+  import { modalType } from '@/components/AuthModal.vue';
 
   @Component<defaultLayout>({})
   export default class defaultLayout extends Vue {

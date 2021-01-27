@@ -100,10 +100,10 @@
     components: {},
     })
     export default class AuthModal extends Vue {
-        @PropSync('visible')
+        @Prop()
         protected show!: boolean;
 
-        @PropSync('modalType')
+        @Prop()
         protected type!: modalType;
 
         protected error: any = null;
@@ -114,7 +114,7 @@
 
         protected isLoading = false;
     
-        protected mounted(): void {};
+        protected mounted(): void { console.log('show', this.show, 'type', this.type)};
 
         protected registerPayload: registerPayload = {
             username: '',
@@ -128,20 +128,15 @@
         };;
 
         protected switchTypes(): void {
-            console.log('switchTypes');
             this.clearFields();
 
             if (this.type === 'login') {
-                this.type = 'register';
+                this.$store.commit('CHANGE_MODAL_TYPE', 'register');
             }
 
             if (this.type === 'register') {
-                console.log('is register');
-                this.$set(this, 'type', 'login');
-                // this.type = 'login';
+                this.$store.commit('CHANGE_MODAL_TYPE', 'login');
             }
-
-            console.log(this.type);
         }
 
         protected clearFields(): void {
@@ -201,8 +196,9 @@
             });
         };
 
-        @Emit()
         protected close(): string {
+            this.$store.commit('SHOW_AUTH_MODAL', false);
+            this.$store.commit('CHANGE_MODAL_TYPE', 'login');
             this.error = null;
             this.clearFields();
             this.confirmationSent = false;

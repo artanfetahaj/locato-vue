@@ -5,7 +5,7 @@
       <div class="tw-w-full tw-border-b-2 tw-border-gray-300">
         <h3 class="tw-text-2xl tw-font-bold">Profiel foto</h3>
       </div>
-      <AvatarUploader :url="user.avatar.url" class="tw-my-32" />
+      <AvatarUploader :url="user.avatar.formats.thumbnail.url" class="tw-my-32" />
     </div>
     <div class="tw-w-full tw-flex tw-flex-wrap tw-mt-16">
       <div class="tw-w-full tw-flex tw-justify-start tw-border-b-2 tw-border-gray-300 tw-py-8">
@@ -63,7 +63,7 @@
               />
             </v-col>
           </v-row>
-          <v-row>
+          <v-row dense>
             <v-col
               cols="12"
             >

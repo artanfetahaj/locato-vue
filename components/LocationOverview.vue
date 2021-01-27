@@ -7,26 +7,36 @@
         <div class="tw-w-full tw-bg-white tw-flex tw-flex-wrap tw--mx-8 tw-mb-32">
             <DynamicFilter :filters="filters" />
         </div>
-        <div class="tw-w-full tw-bg-white tw-flex tw-flex-wrap tw--mx-8">
+        <v-layout wrap align-center class="tw--m-8">
             <template v-if="!isLoading">
-                <div
-                    v-for="location in locations" :key="location.id"
-                    class="tw-w-1/3 tw-p-8"
+                <v-flex
+                    class="tw-p-8"
+                    v-for="location in locations"
+                    :key="location.id"
+                    xs12
+                    sm6
+                    md4
                 >
                     <LocationCard :location="location" />
-                </div>
+                </v-flex>
             </template>
             <template v-if="isLoading">
-                <div
-                    v-for="index in 15" :key="index"
-                    class="tw-w-1/3 tw-p-8"
+                <v-flex
+                    class="tw-p-8"
+                    v-for="index in 15"
+                    :key="index"
+                    xs12
+                    md4
                 >
                     <v-skeleton-loader
                         type="card, list-item"
                         class="w-full"
                     ></v-skeleton-loader>
-                </div>
+                </v-flex>
             </template>
+        </v-layout>
+        <div class="tw-w-full tw-bg-white tw-flex tw-flex-wrap tw--mx-8">
+            
         </div>
     </div>
 </template>

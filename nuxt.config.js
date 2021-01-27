@@ -86,7 +86,7 @@ export default {
           primary: '#333AFD',
         },
       },
-    }
+    },
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

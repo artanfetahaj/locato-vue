@@ -26,7 +26,7 @@
             </v-fade-transition>
             <img
                 class="tw-object-cover"
-                :src="`http://localhost:1337${url}`"
+                :src="url"
                 alt="John"
             >
         </v-avatar>

@@ -6,7 +6,7 @@
         <v-carousel-item
             v-for="(media,i) in location.media"
             :key="i"
-            :src="`http://localhost:1337${media.url}`"
+            :src="media.formats.small.url"
             :to="`/locations/${location.id}`"
             nuxt
         ></v-carousel-item>
@@ -26,6 +26,7 @@
                 text
                 icon
                 color="primary"
+                @click="$store.getters.isAuthenticated ? '' : showAuthModal();"
             >
                 <v-icon>mdi-heart-outline</v-icon>
             </v-btn>
@@ -45,6 +46,10 @@
         protected location!: Location;
 
         protected async mounted(): Promise<void> {}
+
+        protected showAuthModal(): void {
+          this.$store.commit('SHOW_AUTH_MODAL', true);
+        }
     }
 </script>
 

@@ -35,7 +35,7 @@
                     >
                         <img
                             class="tw-object-cover"
-                            :src="`http://localhost:1337${user.avatar.url}`"
+                            :src="user.avatar.formats.thumbnail.url"
                             alt="John"
                         >
                     </v-avatar>
@@ -111,13 +111,15 @@
             {
                 title: 'Aanmelden',
                 action: () => {
-                    this.$emit('show-register');
+                    this.$store.commit('CHANGE_MODAL_TYPE', 'register');
+                    this.$store.commit('SHOW_AUTH_MODAL', true);
                 },
             },
             { 
                 title: 'Inloggen',
                 action: () => {
-                    this.$emit('show-login');
+                    this.$store.commit('CHANGE_MODAL_TYPE', 'login');
+                    this.$store.commit('SHOW_AUTH_MODAL', true);
                 },
                 separator: true,
             },
@@ -139,6 +141,7 @@
             { 
                 title: 'Favorieten',
                 link: '/mijn-favorieten',
+                separator: true,
             },
             { 
                 title: 'Uitloggen',
