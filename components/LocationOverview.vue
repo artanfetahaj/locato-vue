@@ -2,7 +2,7 @@
     <div class="tw-p-32 tw-max-w-page tw-mx-auto">
         <div class="tw-w-full">
             <span>{{ locations.length }} ruimtes gevonden</span>
-            <h1 class="tw-text-black-900 tw-text-4xl tw-font-bold tw-mb-8">Locaties in {{ $route.params.province }}</h1>
+            <h1 class="tw-text-black-900 tw-text-4xl tw-font-bold tw-mb-8">{{ title }}</h1>
         </div>
         <div class="tw-w-full tw-bg-white tw-flex tw-flex-wrap tw--mx-8 tw-mb-32">
             <DynamicFilter :filters="filters" />
@@ -59,7 +59,7 @@
         @Prop()
         protected isLoading!: boolean;
     
-        protected async mounted(): Promise<void> {}
+        protected async mounted(): Promise<void> {};
     }
 </script>
 

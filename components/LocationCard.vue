@@ -25,10 +25,10 @@
             <v-btn
                 text
                 icon
-                color="primary"
-                @click="$store.getters.isAuthenticated ? '' : showAuthModal();"
+                color="red lighten-2"
+                @click="$store.getters.isAuthenticated ? toggleFavorite(location.id) : showAuthModal();"
             >
-                <v-icon>mdi-heart-outline</v-icon>
+                <v-icon>{{  this.locationIsFavorited(location.id) ? 'mdi-heart' : 'mdi-heart-outline'}}</v-icon>
             </v-btn>
         </div>
     </v-card-actions>
@@ -37,6 +37,10 @@
 
 <script lang="ts">
     import { Component, Vue, Prop } from 'vue-property-decorator';
+    import { Location } from '@/models/Location';
+    import { User } from '@/models/User';
+    import _ from 'lodash';
+import { comment } from 'postcss';
 
     @Component<LocationOverview>({
         components: {},
@@ -49,6 +53,57 @@
 
         protected showAuthModal(): void {
           this.$store.commit('SHOW_AUTH_MODAL', true);
+        }
+
+        protected isLocationInFavorites(id: string) {
+            
+        }
+
+        protected toggleFavorite(id: string): void {
+          let favorites = [];
+
+          if (this.locationIsFavorited(id)) {
+            favorites = this.savedLocationsIds.filter((indexedLocation) => indexedLocation !== `${id}`)
+          } else {
+            const savedlocations = _.clone(this.savedLocationsIds);
+            savedlocations.push(`${id}`);
+
+            favorites = savedlocations;
+          }
+
+          this.updateFavorites(favorites);
+        }
+
+        protected async updateFavorites(favorites: string[]): Promise<void> {
+          const payload = {
+            saved_locations: favorites,
+          };
+         
+          console.log(payload);
+            await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
+            .then(() => {
+              this.$auth.fetchUser();
+            })
+            .catch((error) => {
+              console.log(error);
+            });
+
+        }
+
+        protected locationIsFavorited(id: string): boolean {
+          return this.savedLocationsIds.some((indexedId) => indexedId === `${id}` );
+        }
+
+        protected get user(): User {
+            return this.$store.getters.loggedInUser;
+        }
+
+        protected get savedLocationsIds(): string[] {
+          if (!this.user?.saved_locations) {
+            return [];
+          }
+
+          return this.user.saved_locations.map((location: Location) => `${location.id}`);
         }
     }
 </script>

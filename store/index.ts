@@ -1,5 +1,6 @@
 import { GetterTree, ActionTree, MutationTree } from 'vuex'
 import { $auth } from '@/utils/api'
+import { User } from '@/models/User'
 
 export const state = () => ({
   auth: $auth,
@@ -11,7 +12,7 @@ export type RootState = ReturnType<typeof state>
 
 export const getters: GetterTree<RootState, RootState> = {
     isAuthenticated: state => state.auth.loggedIn,
-    loggedInUser: state => state.auth.user,
+    loggedInUser: state => state.auth.user as User,
     showAuthModal: state => state.showAuthModal,
     authModalType: state => state.authModalType,
 }
@@ -21,4 +22,6 @@ export const mutations: MutationTree<RootState> = {
   SHOW_AUTH_MODAL: (state, show: boolean) => (state.showAuthModal = show),
 }
 
-export const actions: ActionTree<RootState, RootState> = {}
+export const actions: ActionTree<RootState, RootState> = {
+
+}

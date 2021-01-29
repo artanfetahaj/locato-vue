@@ -1,3 +1,5 @@
+import { Location } from '@/models/Location';
+
 export class User {
   public id?: string;
 
@@ -10,6 +12,8 @@ export class User {
   public confirm_password?: string;
 
   public avatar?: string;
+
+  public saved_locations?: Location[];
 }
 
 export interface UserCreatePayload {
