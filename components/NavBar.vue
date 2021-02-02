@@ -7,8 +7,9 @@
             tw-left-0
             tw-h-64
             tw-w-full
+            tw-relative
         " 
-        :class="transparent ? 'transparent tw-absolute' : 'tw-relative'" >
+        :class="transparent ? 'transparent' : ''" >
         <div class="tw-relative tw-max-w-page tw-mx-auto tw-h-full tw-flex tw-justify-between tw-px-32">
             <div class="tw-inline-block tw-h-full tw-w-auto">
                 <div class="tw-flex tw-h-full">

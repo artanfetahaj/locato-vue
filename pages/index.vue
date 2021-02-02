@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="tw--mt-64">
     <MainHeader/>
   </div>
 </template>

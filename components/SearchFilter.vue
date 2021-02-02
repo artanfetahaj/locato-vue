@@ -39,6 +39,7 @@
                     color="primary"
                     rounded
                     @click="search()"
+                    :disabled="isDisabled"
                 >
                     Zoeken
                 </v-btn>
@@ -97,6 +98,10 @@
                 return;
             }
             this.$router.push(`/s/${this.province.title}`)
+        }
+
+        protected get isDisabled(): boolean {
+            return !this.activity || !this.province;
         }
     }
 </script>

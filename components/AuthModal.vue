@@ -113,8 +113,6 @@
         protected confirmationSent = false;
 
         protected isLoading = false;
-    
-        protected mounted(): void { console.log('show', this.show, 'type', this.type)};
 
         protected registerPayload: registerPayload = {
             username: '',

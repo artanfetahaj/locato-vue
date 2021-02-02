@@ -10,6 +10,7 @@
             :to="`/locations/${location.id}`"
             nuxt
         ></v-carousel-item>
+        <PriceLabel :price="location.price_per_hour" />
     </v-carousel>
 
     <v-card-title>
@@ -17,7 +18,7 @@
     </v-card-title>
 
     <v-card-subtitle>
-      1,000 miles of wonder
+      <AttendeesLabel v-if="location.attendees > 0" :attendees="location.attendees" :compact="true" />
     </v-card-subtitle>
 
     <v-card-actions>
@@ -28,7 +29,7 @@
                 color="red lighten-2"
                 @click="$store.getters.isAuthenticated ? toggleFavorite(location.id) : showAuthModal();"
             >
-                <v-icon>{{  this.locationIsFavorited(location.id) ? 'mdi-heart' : 'mdi-heart-outline'}}</v-icon>
+                <v-icon>{{  locationIsFavorited(location.id) ? 'mdi-heart' : 'mdi-heart-outline'}}</v-icon>
             </v-btn>
         </div>
     </v-card-actions>
@@ -40,7 +41,6 @@
     import { Location } from '@/models/Location';
     import { User } from '@/models/User';
     import _ from 'lodash';
-import { comment } from 'postcss';
 
     @Component<LocationOverview>({
         components: {},
@@ -53,10 +53,6 @@ import { comment } from 'postcss';
 
         protected showAuthModal(): void {
           this.$store.commit('SHOW_AUTH_MODAL', true);
-        }
-
-        protected isLocationInFavorites(id: string) {
-            
         }
 
         protected toggleFavorite(id: string): void {
@@ -79,15 +75,13 @@ import { comment } from 'postcss';
             saved_locations: favorites,
           };
          
-          console.log(payload);
-            await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
-            .then(() => {
-              this.$auth.fetchUser();
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-
+          await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
+          .then(() => {
+            this.$auth.fetchUser();
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         }
 
         protected locationIsFavorited(id: string): boolean {
