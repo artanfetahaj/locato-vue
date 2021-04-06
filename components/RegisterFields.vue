@@ -2,12 +2,6 @@
     <div class="tw-flex tw-w-full tw-flex-wrap">
         <div class="tw-w-full">
             <v-text-field
-                v-model="authPayload.username"
-                label="Gebruikersnaam"
-            />
-        </div>
-        <div class="tw-w-full">
-            <v-text-field
                 v-model="authPayload.email"
                 label="E-mail of gebruikersnaam"
             />
@@ -17,6 +11,13 @@
                 v-model="authPayload.password"
                 type="password"
                 label="Wachtwoord"
+            />
+        </div>
+        <div class="tw-w-full">
+            <v-text-field
+                v-model="authPayload.password_confirmation"
+                type="password"
+                label="Wachtwoord bevestigen"
             />
         </div>
     </div>

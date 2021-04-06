@@ -51,9 +51,6 @@
     export default class NavBar extends Vue {
         @Prop()
         protected transparent!: boolean;
-    
-        protected mounted(): void {}
-
     }
 </script>
 

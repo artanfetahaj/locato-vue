@@ -19,11 +19,6 @@ import _ from 'lodash';
   export default class Favorites extends Vue {
     protected isLoadingLocations = false;
 
-    protected async mounted(): Promise<void> {
-
-      console.log(this.locations);
-    }
-
     protected get filters(): FilterItem[] {
       return [
         {
@@ -35,7 +30,7 @@ import _ from 'lodash';
     }
 
     protected get locations(): Location[] {
-      return this.$store.getters.loggedInUser.saved_locations
+      return this.$store.getters.$store.getters['Auth/loggedInUser'].saved_locations;
     }
 
 // protected async asyncData({ params, redirect }) {

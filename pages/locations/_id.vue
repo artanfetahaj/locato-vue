@@ -10,12 +10,14 @@
       </div>
     </template>
     <template v-if="!isLoading">
-      <v-img
-        :src="location.media[0].url"
-        max-height="400"
-        class="tw-cursor-pointer"
-        @click="showImageSlider = true;"
-      >
+      <div class="tw-relative">
+        <!-- <v-img
+          :src="location.media[0].url"
+          max-height="400"
+          class="tw-cursor-pointer"
+          @click="showImageSlider = true;"
+        >
+        </v-img> -->
         <div class="tw-absolute tw-top-16 tw-right-16">
           <v-btn
             class="tw-capitalize tw-mr-8"
@@ -27,6 +29,7 @@
           <v-btn
             class="tw-capitalize"
             :color="locationIsFavorited(location.id) ? 'red lighten-2' : 'white'"
+            @click="toggleFavorite(location.id);"
           >
             <v-icon
               class="tw-text-lg tw-mr-4"
@@ -41,11 +44,27 @@
             </span>
           </v-btn>
         </div>
-      </v-img>
-      <div class="tw-w-full tw-py-32">
-        <h1 class="tw-w-full tw-text-4xl tw-font-bold">{{ location.title }}</h1>
-        <AttendeesLabel v-if="location.attendees > 0" :attendees="location.attendees" />
       </div>
+      <v-layout wrap align-center class="tw--m-8 tw-pt-32">
+        <v-flex
+          class="tw-p-8"
+          sm12
+          md8
+        >
+          <div class="tw-w-full">
+            <h1 class="tw-w-full tw-text-4xl tw-font-bold">{{ location.title }}</h1>
+            <AttendeesLabel v-if="location.attendees > 0" :attendees="location.attendees" />
+          </div>
+        </v-flex>
+        <v-flex
+          class="tw-p-8"
+          sm12
+          md4
+        >
+          <BookingCard :location="location" />
+        </v-flex>
+      </v-layout>
+      
     </template>
     <v-dialog
         v-if="!isLoading && location.media"
@@ -98,12 +117,12 @@
     }
 
     protected async getLocation(): Promise<void> {
-      await this.$axios.get(`/locations/${this.$route.params.id}`)
-            .then((response: any) => {
-                this.location = (response.data as Location);
-                this.isLoading = false;
+      await new Location().find(this.$route.params.id)
+            .then((location: Location) => {
+              this.location = location;
+              this.isLoading = false;
             })
-            .catch((e) => console.log(e));
+            .catch((error: any) => console.log(error));
     }
 
     protected showAuthModal(): void {
@@ -130,13 +149,13 @@
         saved_locations: favorites,
       };
       
-      await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
-      .then(() => {
-        this.$auth.fetchUser();
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+      // await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
+      // .then(() => {
+      //   // this.$auth.fetchUser();
+      // })
+      // .catch((error) => {
+      //   console.log(error);
+      // });
     }
 
     protected locationIsFavorited(id: string): boolean {

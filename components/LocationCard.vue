@@ -1,38 +1,40 @@
 <template>
   <v-card
     class="tw-w-full"
+    hover
   >
     <v-carousel height="200" hide-delimiters show-arrows-on-hover>
         <v-carousel-item
             v-for="(media,i) in location.media"
             :key="i"
             :src="media.formats.small.url"
-            :to="`/locations/${location.id}`"
+            :to="`/locations/${location.uuid}`"
             nuxt
         ></v-carousel-item>
         <PriceLabel :price="location.price_per_hour" />
     </v-carousel>
+    <NuxtLink class="tw-text-black-900" :to="`/locations/${location.uuid}`">
+      <v-card-title>
+        <h3 class="tw-font-semibold">{{location.title}}</h3>
+      </v-card-title>
 
-    <v-card-title>
-      <h3 class="tw-font-semibold">{{location.title}}</h3>
-    </v-card-title>
+      <v-card-subtitle>
+        <AttendeesLabel v-if="location.attendees > 0" :attendees="location.attendees" :compact="true" />
+      </v-card-subtitle>
 
-    <v-card-subtitle>
-      <AttendeesLabel v-if="location.attendees > 0" :attendees="location.attendees" :compact="true" />
-    </v-card-subtitle>
-
-    <v-card-actions>
-        <div class="tw-w-full tw-flex tw-justify-end">
-            <v-btn
-                text
-                icon
-                color="red lighten-2"
-                @click="$store.getters.isAuthenticated ? toggleFavorite(location.id) : showAuthModal();"
-            >
-                <v-icon>{{  locationIsFavorited(location.id) ? 'mdi-heart' : 'mdi-heart-outline'}}</v-icon>
-            </v-btn>
-        </div>
-    </v-card-actions>
+      <v-card-actions>
+          <div class="tw-w-full tw-flex tw-justify-end">
+              <v-btn
+                  text
+                  icon
+                  color="red lighten-2"
+                  @click="$store.getters['Auth/isAuthenticated'] ? toggleFavorite(location.id) : showAuthModal();"
+              >
+                  <v-icon>{{  locationIsFavorited(location.id) ? 'mdi-heart' : 'mdi-heart-outline'}}</v-icon>
+              </v-btn>
+          </div>
+      </v-card-actions>
+    </NuxtLink>
   </v-card>
 </template>
 
@@ -42,17 +44,17 @@
     import { User } from '@/models/User';
     import _ from 'lodash';
 
-    @Component<LocationOverview>({
+    @Component<LocationCard>({
         components: {},
     })
-    export default class LocationOverview extends Vue {
+    export default class LocationCard extends Vue {
         @Prop()
         protected location!: Location;
 
         protected async mounted(): Promise<void> {}
 
         protected showAuthModal(): void {
-          this.$store.commit('SHOW_AUTH_MODAL', true);
+          this.$store.commit('Auth/showAuthModal', true);
         }
 
         protected toggleFavorite(id: string): void {
@@ -75,13 +77,13 @@
             saved_locations: favorites,
           };
          
-          await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
-          .then(() => {
-            this.$auth.fetchUser();
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+          // await this.$axios.put("http://localhost:1337/users/me", payload).then(res => console.log(res))
+          // .then(() => {
+          //   // this.$auth.fetchUser();
+          // })
+          // .catch((error) => {
+          //   console.log(error);
+          // });
         }
 
         protected locationIsFavorited(id: string): boolean {
@@ -89,7 +91,7 @@
         }
 
         protected get user(): User {
-            return this.$store.getters.loggedInUser;
+            return this.$store.getters['Auth/loggedInUser'];
         }
 
         protected get savedLocationsIds(): string[] {

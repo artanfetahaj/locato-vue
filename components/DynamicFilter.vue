@@ -69,12 +69,9 @@
         ];
 
         protected async mounted(): Promise<void> {
-          console.log('filters', this.filters);
         };
 
-        protected handleFilterChange(): void {
-          console.log('selectedPrice', this.selectedPrice);
-        };
+        protected handleFilterChange(): void {};
     }
 
     export type FilterItem = {

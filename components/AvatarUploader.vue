@@ -3,6 +3,7 @@
         v-slot="{ hover }"
     >
         <v-avatar
+            :src="url"
             class="tw-cursor-pointer"
             :width="128"
             :height="128"
@@ -13,12 +14,27 @@
             <v-fade-transition>
                 <v-overlay
                     v-ripple
+                    v-show="isUploading"
+                    absolute
+                    color="primary"
+                    ref="overlay"
+                >
+                    <v-progress-circular
+                        :width="3"
+                        color="white"
+                        indeterminate
+                    ></v-progress-circular>
+                </v-overlay>
+            </v-fade-transition>
+            <v-fade-transition>
+                <v-overlay
+                    v-ripple
                     v-show="hover"
                     absolute
                     color="primary"
                     ref="overlay"
                 >
-                    <form ref="uploadForm" @submit.prevent="uploadFile();">
+                    <form ref="uploadForm" @submit.prevent="processFile();">
                         <input type="file" name="avatar" ref="fileInput" class="tw-hidden" @change="handleFileChanged($event);" />
                         <input type="submit" ref="submit" class="tw-hidden" />
                     </form>
@@ -30,64 +46,63 @@
                 </v-overlay>
             </v-fade-transition>
             <img
+                v-if="url"
                 class="tw-object-cover"
                 :src="url"
                 alt="John"
             >
+            <div class="tw-bg-gray-100 tw-w-full tw-h-full">
+                <v-icon class="tw-text-6xl tw-text-gray-500" v-if="!url">mdi-account</v-icon>
+            </div>
         </v-avatar>
     </v-hover>
 </template>
 
 
 <script lang="ts">
-    import { Component, Vue, Prop } from 'vue-property-decorator';
+    import { Component, Vue, Prop, PropSync } from 'vue-property-decorator';
+    import FileToBase64 from '@/support/FileToBase64';
+    import { User } from '@/models/User';
 
-    @Component<FilterButton>({
+    @Component<AvatarUploader>({
         components: {},
     })
-    export default class FilterButton extends Vue {
-        @Prop()
+    export default class AvatarUploader extends Vue {
+        @PropSync('src')
         protected url!: string;
 
-       protected fileList: FileList | null = null;
+        @Prop()
+        protected userId!: string;
 
-        protected async mounted(): Promise<void> {
-            console.log('avatarUploader');
+        protected isUploading = false;
 
-            this.$nextTick(function () {
+        protected error = '';
 
-                console.log('this.uploadForm', this.uploadForm);
-                console.log('this.$refs.fileInput', this.$refs.fileInput);
-                console.log('this.$refs.overlay', this.$refs.overlay);
-
-            })
-        }
+        protected fileList: FileList | null = null;
 
         protected handleFileChanged(event: any): void {
             this.fileList = event.target.files;
             (this.$refs.submit as HTMLFormElement).click();
         }
 
-        protected uploadFile() {
-
+        protected async processFile() {
             if (!this.fileList) {
                 return;
             }
-            let form = this.$refs["uploadForm"] as any;
-            let formData = new FormData();
-            // let formElements = form.elements as HTMLFormElement[];
-            // let payload = {
-            //     files: [],
-            //     ref: 'user',
-            //     refId: this.$store.getters.loggedInUser.id,
-            //     field: 'avatar',
-            // };
-            const file = this.fileList[0];
-            formData.append(`files.avatar`, file, file.name);
-            // formData.append('ref', 'User');
-            // formData.append('refId', this.$store.getters.loggedInUser.id);
-            // formData.append('field', 'avatar');
-            this.$axios.put("http://localhost:1337/users/me", formData).then(res => console.log(res));
+
+            this.isUploading = true;
+            const file = await FileToBase64(this.fileList[0])
+
+            await new User({id: this.userId})
+                .put({avatar: file})
+                .then((user: User) => {
+                    this.$emit('avatarUpdated', user);
+                    this.isUploading = false;
+                })
+                .catch((e) => {
+                    this.isUploading = false;
+                    this.error = e.response.data.message;
+                });
         }
         
         protected get uploadForm(): HTMLFormElement {

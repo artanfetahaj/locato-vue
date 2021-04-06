@@ -46,10 +46,6 @@
     export default class FilterButton extends Vue {
         @Prop()
         protected filter!: FilterItem[];
-
-        protected async mounted(): Promise<void> {
-            console.log('filterbutton');
-        }
     }
 
     export type FilterItem = {

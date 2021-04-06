@@ -9,7 +9,7 @@
                     color="primary"
                     hide-no-data
                     hide-selected
-                    item-text="title"
+                    item-text="name"
                     item-value="id"
                     label="Wat zijn je plannen?"
                     placeholder="Typ om te zoeken"
@@ -25,7 +25,7 @@
                     color="primary"
                     hide-no-data
                     hide-selected
-                    item-text="title"
+                    item-text="name"
                     item-value="id"
                     label="Waar?"
                     placeholder="Typ om te zoeken"
@@ -76,28 +76,28 @@
         }
 
         protected async getActivities(): Promise<void> {
-             await this.$axios.get("/activities")
-            .then((response: any) => {
-                this.activities = (response.data as Activity[]);
+            await new Activity().list()
+            .then((activities: Activity[]) => {
+                this.activities = activities;
                 this.isLoadingActivities = false;
             })
-            .catch((e) => console.log(e));
+            .catch((error: any) => console.log(error));
         }
 
         protected async getProvinces(): Promise<void> {
-             await this.$axios.get("/provinces")
-            .then((response: any) => {
-                this.provinces = (response.data as Province[]);
+            await new Province().list()
+            .then((provinces: Province[]) => {
+                this.provinces = provinces;
                 this.isLoadingProvinces = false;
             })
-            .catch((e) => console.log(e));
+            .catch((error: any) => console.log(error));
         }
 
         protected search(): void {
             if (!this.province) {
                 return;
             }
-            this.$router.push(`/s/${this.province.title}`)
+            this.$router.push(`/s/${this.province.name}`)
         }
 
         protected get isDisabled(): boolean {

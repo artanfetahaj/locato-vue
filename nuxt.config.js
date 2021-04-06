@@ -23,6 +23,7 @@ export default {
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
+    '~/plugins/vue-datetime'
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -44,36 +45,12 @@ export default {
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
     '@nuxtjs/dotenv',
-    '@nuxtjs/auth',
+    'cookie-universal-nuxt',
   ],
-
-  /*
-  ** Auth module configuration
-  ** See https://auth.nuxtjs.org/schemes/local.html#options
-  */
-  auth: {
-    strategies: {
-      local: {
-        endpoints: {
-          login: {
-            url: 'auth/local',
-            method: 'post',
-            propertyName: 'jwt'
-          },
-          user: {
-            url: 'users/me',
-            method: 'get',
-            propertyName: false
-          },
-          logout: false
-        }
-      }
-    }
-  },
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
   axios: {
-    baseURL: process.env.API_AUTH_URL
+    baseURL: process.env.VUE_APP_HOST_API,
   },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
@@ -90,5 +67,11 @@ export default {
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
-  build: {}
+  build: {
+    transpile: ['vue-datetime']
+  },
+
+  // router: {
+  //   middleware: 'Auth',
+  // }
 }

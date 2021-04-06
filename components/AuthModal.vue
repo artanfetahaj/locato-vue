@@ -29,14 +29,16 @@
             <v-card-text>
                 <div class="tw-flex tw-flex-wrap tw-w-full">
                     <template v-if="!confirmationSent">
-                        <RegisterFields
-                            v-if="type === 'register'"
-                            :payload="registerPayload"
-                        />
-                        <LoginFields
-                            v-if="type === 'login'"
-                            :payload="loginPayload"
-                        />
+                        <v-form class="tw-w-full">
+                            <RegisterFields
+                                v-if="type === 'register'"
+                                :payload="registerPayload"
+                            />
+                            <LoginFields
+                                v-if="type === 'login'"
+                                :payload="loginPayload"
+                            />
+                        </v-form>
                     </template>
                     <template v-if="confirmationSent">
                         {{ successMessage }}
@@ -70,8 +72,6 @@
                                 </div>
                                 <span class="tw-self-center tw-normal-case">Doorgaan met <span class="tw-font-bold">Google</span></span>
                             </div>
-                            
-                            
                         </v-btn>
                     </div>
                 </div>
@@ -95,6 +95,9 @@
 
 <script lang="ts">
     import { Component, Vue, Prop, PropSync, Watch, Emit } from 'vue-property-decorator';
+    import { createOauthAccessToken, OauthPayload } from '@/support/Clients/OauthClient';
+    import { User } from '@/models/User';
+    import cookies from 'js-cookie';
 
     @Component<AuthModal>({
     components: {},
@@ -115,38 +118,37 @@
         protected isLoading = false;
 
         protected registerPayload: registerPayload = {
-            username: '',
+            type: 0,
             email: '',
             password: '',
         };
 
         protected loginPayload: loginPayload = {
-            identifier: '',
-            password: '',
+            email: 'affetahaj@gmail.com',
+            password: 'Secret123!',
         };;
 
         protected switchTypes(): void {
             this.clearFields();
 
             if (this.type === 'login') {
-                this.$store.commit('CHANGE_MODAL_TYPE', 'register');
+                this.$store.commit('Auth/ChangeModalType', 'register');
             }
 
             if (this.type === 'register') {
-                this.$store.commit('CHANGE_MODAL_TYPE', 'login');
+                this.$store.commit('Auth/ChangeModalType', 'login');
             }
         }
 
         protected clearFields(): void {
-            this.registerPayload.username = '';
             this.registerPayload.email = '';
             this.registerPayload.password = '';
-            this.loginPayload.identifier = '';
+            this.loginPayload.email = '';
             this.loginPayload.password = '';
         }
 
         protected async register(): Promise<void> {
-            if (!this.registerPayload.username || !this.registerPayload.email || !this.registerPayload.password) {
+            if (!this.registerPayload.email || !this.registerPayload.password) {
                 return;
             }
 
@@ -155,7 +157,7 @@
             this.$axios.setToken(false);
 
             await this.$axios.post("auth/local/register", {
-                    username: this.registerPayload.username,
+                    type: this.registerPayload.type,
                     email: this.registerPayload.email,
                     password: this.registerPayload.password,
                 })
@@ -171,32 +173,49 @@
         };
 
         protected async login(): Promise<void> {
-            if (!this.loginPayload.identifier || !this.loginPayload.password) {
+            if (!this.loginPayload.email || !this.loginPayload.password) {
                 return;
             }
 
             this.error = null;
             this.isLoading = true;
 
-            await this.$auth.loginWith("local", {
-                data: {
-                    identifier: this.loginPayload.identifier,
-                    password: this.loginPayload.password,
+            await createOauthAccessToken({
+                email: this.loginPayload.email,
+                password: this.loginPayload.password,
+            } as OauthPayload)
+            .then(async (response: any): Promise<void> => {
+                console.log('response', response);
+                cookies.set('access', response.data.token);
+
+                console.log('token cookie set', cookies.get('access'));
+                const user = await this.getUser();
+
+                if (user) {
+                    this.$store.dispatch('Auth/userAuthenticated', user);
+                    this.isLoading = false;
+                    this.close();
                 }
-            })
-            .then((response: any) => {
+            }).catch(() => {
+                console.log('catch');
+                this.error = 'Invalid Credentials';
                 this.isLoading = false;
-                this.close();
-            })
-            .catch((e) => {
-                this.isLoading = false;
-                this.error = e.response.data.message[0].messages[0].message
             });
         };
 
+        protected async getUser(): Promise<User | null> {
+            const user: User = await new User().me();
+            
+            if (user) {
+                return user;
+            }
+
+            return null;
+        }
+
         protected close(): string {
-            this.$store.commit('SHOW_AUTH_MODAL', false);
-            this.$store.commit('CHANGE_MODAL_TYPE', 'login');
+            this.$store.commit('Auth/showAuthModal', false);
+            this.$store.commit('Auth/ChangeModalType', 'login');
             this.error = null;
             this.clearFields();
             this.confirmationSent = false;
@@ -221,13 +240,13 @@
     }
 
     export interface registerPayload {
-        username: string,
+        type: number,
         email: string,
         password: string,
     }
 
     export interface loginPayload {
-        identifier: string,
+        email: string,
         password: string,
     }
 

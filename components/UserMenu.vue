@@ -26,7 +26,7 @@
                 "
                 :class="transparent ? 'tw-ripple-bg-white tw-bg-white' : 'tw-ripple-bg-gray-200 tw-bg-gray-200'"
             >
-                <div v-if="$store.getters.isAuthenticated" class="tw-self-center pl-2">
+                <div v-if="$store.getters['Auth/isAuthenticated']" class="tw-self-center pl-2">
                     <v-avatar
                         :width="22"
                         :height="22"
@@ -35,13 +35,13 @@
                     >
                         <img
                             class="tw-object-cover"
-                            :src="user.avatar.formats.thumbnail.url"
+                            :src="user.avatar"
                             alt="John"
                         >
                     </v-avatar>
                 </div>
                 <v-icon
-                    v-if="!$store.getters.isAuthenticated"
+                    v-if="!$store.getters['Auth/isAuthenticated']"
                     :class="transparent ? 'tw-text-primary-500' : 'tw-text-black-900'"
                     class="pl-3 tw-self-center tw-text-xl"
                 >
@@ -104,22 +104,20 @@
     export default class UserMenu extends Vue {
         @Prop()
         protected transparent!: boolean;
-    
-        protected mounted(): void {}
 
         protected unauthenticatedItems: navigationItem[] = [
             {
                 title: 'Aanmelden',
                 action: () => {
-                    this.$store.commit('CHANGE_MODAL_TYPE', 'register');
-                    this.$store.commit('SHOW_AUTH_MODAL', true);
+                    this.$store.commit('Auth/ChangeModalType', 'register');
+                    this.$store.commit('Auth/showAuthModal', true);
                 },
             },
             { 
                 title: 'Inloggen',
                 action: () => {
-                    this.$store.commit('CHANGE_MODAL_TYPE', 'login');
-                    this.$store.commit('SHOW_AUTH_MODAL', true);
+                    this.$store.commit('Auth/ChangeModalType', 'login');
+                    this.$store.commit('Auth/showAuthModal', true);
                 },
                 separator: true,
             },
@@ -145,8 +143,8 @@
             },
             { 
                 title: 'Uitloggen',
-                action: async () => {
-                     await this.$auth.logout();
+                action: () => {
+                    this.$store.dispatch('Auth/userDeauthenticated');
                 },
             },
             { 
@@ -156,11 +154,11 @@
         ];
 
         protected get items(): navigationItem[] {
-            return this.$store.getters.isAuthenticated ? this.authenticatedItems : this.unauthenticatedItems;
+            return this.$store.getters['Auth/isAuthenticated'] ? this.authenticatedItems : this.unauthenticatedItems;
         }
 
         protected get user(): User {
-            return this.$store.getters.loggedInUser;
+            return this.$store.getters['Auth/loggedInUser'];
         }
     }
 

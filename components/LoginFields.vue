@@ -2,8 +2,8 @@
     <div class="tw-flex tw-w-full tw-flex-wrap">
         <div class="tw-w-full">
             <v-text-field
-                v-model="authPayload.identifier"
-                label="E-mail of gebruikersnaam"
+                v-model="authPayload.email"
+                label="E-mail"
             />
         </div>
         <div class="tw-w-full">

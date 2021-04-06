@@ -6,7 +6,7 @@
         <div class="tw-w-full tw-border-b-2 tw-border-gray-300">
           <h3 class="tw-text-2xl tw-font-bold">Profiel foto</h3>
         </div>
-        <AvatarUploader :url="user.avatar.formats.thumbnail.url" class="tw-my-32" />
+        <AvatarUploader :src="user.avatar" v-on:avatarUpdated="handleUserUpdated($event);" :userId="user.uuid" class="tw-my-32" />
       </div>
       <div class="tw-w-full tw-flex tw-flex-wrap tw-mt-16">
         <div class="tw-w-full tw-flex tw-justify-start tw-border-b-2 tw-border-gray-300 tw-py-8">
@@ -143,18 +143,16 @@
 
     protected isFormValid = false;
 
+    protected error = '';
+
     protected beforeMount(): void {
-      this.user = _.cloneDeep(this.$store.getters.loggedInUser);
-    }
-
-    protected mounted(): void {
-
+      this.user = _.cloneDeep(this.$store.getters['Auth/loggedInUser']);
     }
 
     protected toggleEdit(): void {
       if (this.isEditing) {
         this.isEditing = false;
-        this.user = _.cloneDeep(this.$store.getters.loggedInUser);
+        this.user = _.cloneDeep(this.$store.getters['Auth/loggedInUser']);
         return;
       }
 
@@ -163,33 +161,41 @@
 
     protected validate(): void {
       (this.$refs.profileForm as any).validate();
-      console.log(this.isFormValid);
     }
 
-    protected async fetchUser(): Promise<void> {
-      await this.$auth.fetchUser();
-      this.user = _.cloneDeep(this.$store.getters.loggedInUser);
+    protected async handleUserUpdated(user: User) {
+      await this.$store.dispatch('Auth/userFetched', user);
+      this.user = _.cloneDeep(this.$store.getters['Auth/loggedInUser']);
     }
 
     protected async updateUser(): Promise<void> {
+      if (!this.user) {
+        return;
+      }
+
       this.validate();
+
+      const payload = this.user.getUserUpdatePayload();
       
       if (this.isFormValid) {
         this.isUpdating = true;
-        await this.$axios.put("http://localhost:1337/users/me", this.user)
-          .then(() => {
-            this.isUpdating = false;
-            this.isUpdated = true;
-            this.fetchUser();
-            setTimeout(() => {
-              this.isUpdated = false;
-              this.isEditing = false;
-            }, 1000);
+        await new User({id: this.user.uuid})
+          .put(payload)
+          .then(async (user: User) => {
+              await this.handleUserUpdated(user);
+              this.isUpdating = false;
+              this.isUpdated = true;
+
+              setTimeout(() => {
+                this.isUpdated = false;
+                this.isEditing = false;
+              }, 1000);
+
           })
           .catch((e) => {
-            this.isEditing = false;
-            this.isUpdating = false;
-          });;
+              this.isUpdating = false;
+              this.error = e.response.data.message;
+          });
       }
     }
   }
