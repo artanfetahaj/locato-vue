@@ -11,10 +11,11 @@
                     hide-selected
                     item-text="name"
                     item-value="id"
-                    label="Wat zijn je plannen?"
+                    label="Wat voor locatie zoek je?"
                     placeholder="Typ om te zoeken"
                     hide-details
                     return-object
+                    clearable
                 ></v-autocomplete>
             </div>
             <div class="tw-w-1/2 tw-mx-8">
@@ -31,6 +32,7 @@
                     placeholder="Typ om te zoeken"
                     hide-details
                     return-object
+                    clearable
                 ></v-autocomplete>
             </div>
             <div class="tw-w-128 tw-absolute tw-right-0 tw-top-1/2 tw-transform tw--translate-y-1/2 tw-text-center">
@@ -105,7 +107,3 @@
         }
     }
 </script>
-
-<style lang="scss">
-   
-</style>

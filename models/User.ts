@@ -25,6 +25,8 @@ export class User extends Model {
 
   public first_name?: string;
 
+  public infix_name?: string;
+
   public last_name?: string;
   
   public phone?: string;
@@ -37,15 +39,6 @@ export class User extends Model {
 
   public me(): Promise<this> {
     return this.request('get', '/user', {}, '');
-  }
-
-  public getUserUpdatePayload(): UpdateUserPayload {
-    return {
-      first_name: this.first_name,
-      last_name: this.last_name,
-      email: this.email,
-      avatar: this.avatar,
-    }
   }
 }
 

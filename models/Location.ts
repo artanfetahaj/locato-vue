@@ -1,5 +1,5 @@
 
-import { Model } from '@/models/Model.ts';
+import { Model } from '@/models/Model';
 
 export class Location extends Model {
   protected $name = 'Location';

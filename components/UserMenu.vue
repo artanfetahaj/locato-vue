@@ -123,7 +123,7 @@
             },
             {
                 title: 'Locatie verhuren',
-                link: '/verhuren',
+                link: '/host',
             },
             { 
                 title: 'Hulp',
@@ -133,12 +133,16 @@
 
         protected authenticatedItems: navigationItem[] = [
             { 
-                title: 'Mijn profiel',
-                link: '/mijn-profiel',
+                title: 'Jouw profiel',
+                link: '/my-profile',
+            },
+            { 
+                title: 'Jouw locaties',
+                link: '/my-locations',
             },
             { 
                 title: 'Favorieten',
-                link: '/mijn-favorieten',
+                link: '/my-favorites',
                 separator: true,
             },
             { 

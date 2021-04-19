@@ -32,7 +32,7 @@
 
 <style lang="scss">
     .mainHeader {
-        background-image: url('~assets/images/living-space.jpg');
+        background-image: url('~assets/images/photo-studio.jpg');
         background-size: cover;
         background-position: center center;
         position: relative;

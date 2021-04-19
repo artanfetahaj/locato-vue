@@ -1,12 +1,12 @@
 <template>
   <div class="tw-w-full tw-max-w-page tw-mx-auto tw-flex-wrap tw-py-40 tw-px-32">
     <template v-if="user">
-      <h1 class="tw-w-full tw-text-5xl tw-font-bold">Mijn Profiel</h1>
+      <h1 class="tw-w-full tw-text-5xl tw-font-bold">Jouw profiel</h1>
       <div class="tw-w-full tw-flex tw-flex-wrap tw-mt-24">
         <div class="tw-w-full tw-border-b-2 tw-border-gray-300">
           <h3 class="tw-text-2xl tw-font-bold">Profiel foto</h3>
         </div>
-        <AvatarUploader :src="user.avatar" v-on:avatarUpdated="handleUserUpdated($event);" :userId="user.uuid" class="tw-my-32" />
+        <AvatarUploader :src="user.avatar" v-on:avatarUpdated="handleUserUpdated($event);" :userId="user.id" class="tw-my-32" />
       </div>
       <div class="tw-w-full tw-flex tw-flex-wrap tw-mt-16">
         <div class="tw-w-full tw-flex tw-justify-start tw-border-b-2 tw-border-gray-300 tw-py-8">
@@ -125,12 +125,11 @@
 
 <script lang="ts">
   import { Component, Vue } from 'vue-property-decorator';
-  import { User } from '@/models/User';
+  import { UpdateUserPayload, User } from '@/models/User';
   import _ from 'lodash';
 
   @Component<Profile>({
-    components: {
-    }
+    components: {}
   })
   export default class Profile extends Vue {
     protected isEditing = false;
@@ -157,6 +156,7 @@
       }
 
       this.isEditing = true;
+      console.log('user', this.user);
     }
 
     protected validate(): void {
@@ -168,6 +168,15 @@
       this.user = _.cloneDeep(this.$store.getters['Auth/loggedInUser']);
     }
 
+    protected getUserUpdatePayload(): UpdateUserPayload {
+      return {
+        first_name: this.user?.first_name,
+        last_name: this.user?.last_name,
+        email: this.user?.email,
+        avatar: this.user?.avatar,
+      }
+    }
+
     protected async updateUser(): Promise<void> {
       if (!this.user) {
         return;
@@ -175,11 +184,11 @@
 
       this.validate();
 
-      const payload = this.user.getUserUpdatePayload();
-      
+      const payload = this.getUserUpdatePayload();
+
       if (this.isFormValid) {
         this.isUpdating = true;
-        await new User({id: this.user.uuid})
+        await new User({id: this.user.id})
           .put(payload)
           .then(async (user: User) => {
               await this.handleUserUpdated(user);

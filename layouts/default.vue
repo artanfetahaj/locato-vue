@@ -1,6 +1,7 @@
 <template>
   <v-app :light="true" class="tw-font-body">
     <NavBar
+      :whiteLogo="showWhiteLogo"
       v-on:show-login="showAuthModal('login')"
       v-on:show-register="showAuthModal('register')"
       :transparent="showTransparentNav"
@@ -34,8 +35,12 @@
         this.authModalVisible = true;
       }
 
+      protected get showWhiteLogo(): boolean {
+        return this.$route.path === '/host';
+      }
+
       protected get showTransparentNav(): boolean {
-        return this.$route.path === '/';
+        return this.$route.path === '/' || this.$route.path === '/host';
       }
   }
 </script>
