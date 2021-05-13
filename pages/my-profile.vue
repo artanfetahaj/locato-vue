@@ -2,6 +2,7 @@
   <div class="tw-w-full tw-max-w-page tw-mx-auto tw-flex-wrap tw-py-40 tw-px-32">
     <template v-if="user">
       <h1 class="tw-w-full tw-text-5xl tw-font-bold">Jouw profiel</h1>
+      <!-- {{user}} -->
       <div class="tw-w-full tw-flex tw-flex-wrap tw-mt-24">
         <div class="tw-w-full tw-border-b-2 tw-border-gray-300">
           <h3 class="tw-text-2xl tw-font-bold">Profiel foto</h3>
@@ -19,8 +20,7 @@
               fab
               x-small
           >
-              <v-icon
-              >
+              <v-icon>
                   mdi-pencil
               </v-icon>
           </v-btn>

@@ -11,20 +11,20 @@
     </template>
     <template v-if="!isLoading">
       <div class="tw-relative">
-        <!-- <v-img
-          :src="location.media[0].url"
+        <v-img
+          :src="location.images[0].file_url"
           max-height="400"
           class="tw-cursor-pointer"
           @click="showImageSlider = true;"
         >
-        </v-img> -->
+        </v-img>
         <div class="tw-absolute tw-top-16 tw-right-16">
           <v-btn
             class="tw-capitalize tw-mr-8"
             color="white"
           >
-            <v-icon class="tw-text-lg tw-mr-4 tw-text-gray-800">mdi-share</v-icon>
-            <span class="tw-text-gray-800">Delen</span>
+            <v-icon class="tw-text-lg tw-mr-4 tw-text-black-800">mdi-share</v-icon>
+            <span class="tw-text-black-800">Delen</span>
           </v-btn>
           <v-btn
             class="tw-capitalize"
@@ -33,12 +33,12 @@
           >
             <v-icon
               class="tw-text-lg tw-mr-4"
-              :class="locationIsFavorited(location.id) ? 'tw-text-white' : 'tw-text-gray-800'"
+              :class="locationIsFavorited(location.id) ? 'tw-text-white' : 'tw-text-black-800'"
             >
               {{  locationIsFavorited(location.id) ? 'mdi-heart' : 'mdi-heart-outline'}}
             </v-icon>
             <span
-              :class="locationIsFavorited(location.id) ? 'tw-text-white' : 'tw-text-gray-800'"
+              :class="locationIsFavorited(location.id) ? 'tw-text-white' : 'tw-text-black-800'"
             >
               {{  locationIsFavorited(location.id) ? 'Opgeslagen' : 'Opslaan'}}
             </span>
@@ -67,25 +67,46 @@
       
     </template>
     <v-dialog
-        v-if="!isLoading && location.media"
+        v-if="!isLoading && location.images"
         v-model="showImageSlider"
-        max-width="1200"
+        max-width="1350"
+        overlay-opacity="0.8"
+        eager
     >
-        <v-carousel height="450" >
+        <v-carousel hide-delimiter-background height="auto" >
             <v-carousel-item
-                transition="v-fade-transition"
-                v-for="(media,i) in location.media"
+                v-for="(image,i) in location.images"
                 :key="i"
-                :src="media.url"
+                :src="image.file_url"
                 nuxt
             ></v-carousel-item>
+            <template v-slot:prev="{ on, attrs }">
+              <v-btn
+                color="white"
+                light
+                v-bind="attrs"
+                v-on="on"
+                fab
+                small
+              ><v-icon>mdi-chevron-left</v-icon></v-btn>
+            </template>
+            <template v-slot:next="{ on, attrs }">
+              <v-btn
+                color="white"
+                light
+                v-bind="attrs"
+                v-on="on"
+                fab
+                small
+              ><v-icon>mdi-chevron-right</v-icon></v-btn>
+            </template>
         </v-carousel>
     </v-dialog>
   </div>
 </template>
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
-  import { Location } from '@/models/Location.ts';
+  import { Location } from '@/models/Location';
   import _ from 'lodash';
   import { User } from '@/models/User';
 

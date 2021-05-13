@@ -11,7 +11,7 @@
                     hide-selected
                     item-text="name"
                     item-value="id"
-                    label="Wat voor locatie zoek je?"
+                    label="Waarvoor zoek je een ruimte?"
                     placeholder="Typ om te zoeken"
                     hide-details
                     return-object

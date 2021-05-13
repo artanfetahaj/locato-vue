@@ -121,6 +121,7 @@
             type: 0,
             email: '',
             password: '',
+            password_confirmation: '',
         };
 
         protected loginPayload: loginPayload = {
@@ -156,10 +157,11 @@
             this.isLoading = true;
             this.$axios.setToken(false);
 
-            await this.$axios.post("auth/local/register", {
+            await this.$axios.post("/register", {
                     type: this.registerPayload.type,
                     email: this.registerPayload.email,
                     password: this.registerPayload.password,
+                    password_confirmation: this.registerPayload.password_confirmation,
                 })
             .then((response: any) => {
                 this.isLoading = false;
@@ -243,6 +245,7 @@
         type: number,
         email: string,
         password: string,
+        password_confirmation: string,
     }
 
     export interface loginPayload {

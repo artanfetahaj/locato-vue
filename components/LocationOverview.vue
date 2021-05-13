@@ -8,7 +8,7 @@
             <DynamicFilter :filters="filters" />
         </div>
         <v-layout wrap align-center class="tw--m-8">
-            <template v-if="!isLoading">
+            <template v-if="!isLoading && locations.length">
                 <v-flex
                     class="tw-p-8"
                     v-for="location in locations"
@@ -20,7 +20,7 @@
                     <LocationCard :location="location" />
                 </v-flex>
             </template>
-            <template v-if="isLoading">
+            <template v-else>
                 <v-flex
                     class="tw-p-8"
                     v-for="index in 15"

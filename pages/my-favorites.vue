@@ -10,9 +10,9 @@
 </template>
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
-  import { Location } from '@/models/Location.ts';
+  import { Location } from '@/models/Location';
   import { FilterItem } from '@/components/FilterButton.vue';
-import _ from 'lodash';
+  import _ from 'lodash';
 
   @Component<Favorites>({
   })
@@ -30,29 +30,8 @@ import _ from 'lodash';
     }
 
     protected get locations(): Location[] {
-      return this.$store.getters.$store.getters['Auth/loggedInUser'].saved_locations;
+      // return this.$store.getters['Auth/loggedInUser'].saved_locations;
+      return [];
     }
-
-// protected async asyncData({ params, redirect }) {
-//     await this.$axios.get(`/locations?province=${params.province}`)
-//           .then((response: any) => {
-//               console.log(response);
-//           })
-//           .catch((e) => console.log(e));
-
-//   const filteredMountain = mountains.find(
-//     (el) =>
-//       el.continent.toLowerCase() === params.continent &&
-//       el.slug === params.mountain
-//   )
-//   if (filteredMountain) {
-//     return {
-//       continent: filteredMountain.continent,
-//       mountain: filteredMountain.title
-//     }
-//   } else {
-//     redirect('/')
-//   }
-// }
 }
 </script>

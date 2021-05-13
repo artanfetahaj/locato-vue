@@ -9,7 +9,7 @@ export class User extends Model {
 
   protected $primaryKey = 'id';
 
-  protected $fillable: string[] = [
+  protected $fillable = [
     'email',
     'first_name',
     'last_name',
@@ -18,8 +18,6 @@ export class User extends Model {
   ];
 
   public id?: string;
-
-  public uuid?: string;
 
   public email?: string;
 

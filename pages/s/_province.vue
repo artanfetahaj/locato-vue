@@ -10,7 +10,7 @@
 </template>
 <script lang="ts">
   import { Component, Vue, Prop } from 'vue-property-decorator';
-  import { Location } from '@/models/Location.ts';
+  import { Location } from '@/models/Location';
   import { FilterItem } from '@/components/FilterButton.vue';
 
   @Component<provinceLocations>({
@@ -39,9 +39,9 @@
     }
 
     protected async getLocations(): Promise<void> {
-      await this.$axios.get(`/locations?province.title=${this.$route.params.province}`)
-            .then((response: any) => {
-                this.locations = (response.data as Location[]);
+      await new Location().all()
+            .then((locations: Location[]) => {
+                this.locations = locations;
                 this.isLoadingLocations = false;
             })
             .catch((e) => console.log(e));

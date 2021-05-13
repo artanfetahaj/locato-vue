@@ -5,15 +5,15 @@
   >
     <v-carousel height="200" hide-delimiters show-arrows-on-hover>
         <v-carousel-item
-            v-for="(media,i) in location.media"
+            v-for="(image,i) in location.images"
             :key="i"
-            :src="media.formats.small.url"
-            :to="`/locations/${location.uuid}`"
+            :src="image.file_url"
+            :to="`/locations/${location.id}`"
             nuxt
         ></v-carousel-item>
         <PriceLabel :price="location.price_per_hour" />
     </v-carousel>
-    <NuxtLink class="tw-text-black-900" :to="`/locations/${location.uuid}`">
+    <NuxtLink class="tw-text-black-900" :to="`/locations/${location.id}`">
       <v-card-title>
         <h3 class="tw-font-semibold">{{location.title}}</h3>
       </v-card-title>
