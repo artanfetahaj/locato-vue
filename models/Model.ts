@@ -179,7 +179,7 @@ export class Model {
         }
       });
 
-      payload.filters = this.filters;
+      payload.filter = this.filters;
     }
 
     if (this.$page !== null) {

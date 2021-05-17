@@ -39,6 +39,7 @@
   import { Location } from '@/models/Location';
   import _ from 'lodash';
   import { MiDataTableOptions } from '@/components/MiDataTable.vue';
+import { User } from '~/models/User';
 
   @Component<Profile>({
     components: {}
@@ -52,13 +53,13 @@
 
     protected get tableOptions(): MiDataTableOptions {
       return {
-        model: new Location(),
+        model: new Location().include('user').filter('user.uuid', this.user.id),
         headers: [
-          {
-            text: 'Thumbnail',
-            value: 'images',
-            width: '4%',
-          },
+          // {
+          //   text: 'Thumbnail',
+          //   value: 'images',
+          //   width: '4%',
+          // },
           {
             text: 'Titel',
             value: 'title',
@@ -73,6 +74,11 @@
         ],
       }
     }
+
+    protected get user(): User {
+        return this.$store.getters['Auth/loggedInUser'];
+    }
+
   }
 </script>
 

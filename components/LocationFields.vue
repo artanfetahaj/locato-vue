@@ -14,9 +14,11 @@
                 <v-text-field
                     class="tw-w-2/3 tw-pl-16"
                     solo
+                    flat
                     v-model="locationPayload.title"
                     label="Titel"
                     :rules="[v => !!v || 'Geef je locatie een titel']"
+                    outlined
                 />
             </div>
             <div class="tw-w-full tw-flex">
@@ -25,10 +27,29 @@
                     height="300"
                     class="tw-w-2/3 tw-pl-16"
                     solo
+                    flat
                     v-model="locationPayload.description"
                     label="Beschrijving"
                     :rules="[v => !!v || 'Omschrijf de locatie']"
+                    outlined
                 />
+            </div>
+            <div class="tw-w-full tw-flex">
+                <span class="tw-w-1/3 tw-pl-16 tw-font-bold tw-text-black tw-self-top tw-mb-24">Max. aantal aanwezigen</span>
+                <v-text-field
+                    type="number"
+                    class="tw-w-2/3 tw-pl-16"
+                    solo
+                    flat
+                    v-model="locationPayload.capacity"
+                    label="Max. aantal aanwezigen"
+                    :rules="[v => !!v || 'Een maximaal aantal aanwezigen is verplicht']"
+                    outlined
+                >
+                    <template v-slot:prepend-inner>
+                        <v-icon class="tw-text-lg tw-text-primary-500 tw-mr-4">mdi-account</v-icon>
+                    </template>
+                </v-text-field>
             </div>
             <div class="tw-w-full tw-flex">
                 <span class="tw-w-1/3 tw-pl-16 tw-font-bold tw-text-black tw-self-top tw-mb-24">Prijs per dagdeel</span>
@@ -36,10 +57,11 @@
                     type="number"
                     class="tw-w-2/3 tw-pl-16"
                     solo
+                    flat
                     v-model="locationPayload.price_per_daypart"
                     label="Prijs per dagdeel"
-                    prepend-inner="€"
                     :rules="[v => !!v || 'Een prijs per dagdeel is verplicht']"
+                    outlined
                 >
                     <template v-slot:prepend-inner>
                         <v-icon class="tw-text-lg tw-text-primary-500 tw-mr-4">mdi-currency-eur</v-icon>
@@ -56,9 +78,10 @@
                     type="number"
                     class="tw-w-2/3 tw-pl-16"
                     solo
+                    flat
                     v-model="locationPayload.price_per_hour"
                     label="Prijs per uur"
-                    prepend-inner="€"
+                    outlined
                 >
                     <template v-slot:prepend-inner>
                         <v-icon class="tw-text-lg tw-text-primary-500 tw-mr-4">mdi-currency-eur</v-icon>

@@ -332,7 +332,7 @@ export default class MiDataTable extends Vue {
     this.isLoading = true;
     this.options.model
       .limit(this.perPage)
-      .filter('search', this.search)
+      // .filter('search', this.search)
       .page(this.page)
       .all()
       .then((items: Model[]) => {

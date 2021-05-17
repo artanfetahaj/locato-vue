@@ -36,6 +36,7 @@
     "vue-datetime": "^1.0.0-beta.14",
     "vue-popperjs": "^2.3.0",
     "vue-property-decorator": "^9.1.2",
+    "vue-read-more": "^1.1.1",
     "vue-upload-multiple-image": "^1.1.6",
     "weekstart": "^1.0.1"
   },

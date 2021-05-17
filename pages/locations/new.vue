@@ -152,8 +152,7 @@
     protected isFormValid = false;
 
     protected createPayload: createPayload = {
-      // user_id: this.$store.getters['Auth/loggedInUser'].id,
-      user_id: '1',
+      user: this.$store.getters['Auth/loggedInUser'].id,
       title: '',
       description: '',
       images: [],
@@ -181,7 +180,7 @@
       } catch(error) {
         console.log(error);
       } finally {
-        
+        this.isCreating = false;
       }
     }
 

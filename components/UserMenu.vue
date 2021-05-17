@@ -34,10 +34,14 @@
                         :min-height="22"
                     >
                         <img
+                            v-if="user.avatar"
                             class="tw-object-cover"
                             :src="user.avatar"
                             alt="John"
                         >
+                        <div class="tw-bg-gray-100 tw-w-full tw-h-full">
+                            <v-icon v-if="!user.avatar" class="tw-text-2xl tw-mb-4 tw-pb-2 tw-text-gray-500">mdi-account</v-icon>
+                        </div>
                     </v-avatar>
                 </div>
                 <v-icon

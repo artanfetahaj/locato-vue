@@ -1,5 +1,6 @@
 
 import { Model } from '@/models/Model';
+import { User } from '@/models/User';
 
 export class Location extends Model {
   protected $name = 'Location';
@@ -18,6 +19,8 @@ export class Location extends Model {
   public title?: string;
 
   public description?: string;
+
+  public user?: User;
 }
 
 export interface updatePayload {
@@ -26,14 +29,14 @@ export interface updatePayload {
 }
 
 export interface createPayload {
-  user_id: string,
+  user: string,
   title?: string;
   description?: string;
   images?: string[];
   daypart_rent_only?: boolean;
   price_per_hour?: string;
   price_per_daypart?: string;
-  max_participants?: number;
+  capacity?: number;
 }
 
 export interface locationImagePayload {

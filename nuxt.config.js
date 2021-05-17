@@ -24,6 +24,7 @@ export default {
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
     '~/plugins/vue-datetime',
+    '~/plugins/vue-read-more',
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
@@ -68,7 +69,7 @@ export default {
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
-    transpile: ['vue-datetime'],
+    transpile: ['vue-datetime', 'vue-read-more'],
   },
 
   // router: {

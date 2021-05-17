@@ -20,6 +20,15 @@
         </v-img>
         <div class="tw-absolute tw-top-16 tw-right-16">
           <v-btn
+            v-if="isOwner"
+            class="tw-capitalize tw-mr-8"
+            color="white"
+          >
+            <v-icon class="tw-text-lg tw-mr-4 tw-text-black-800">mdi-pencil</v-icon>
+            <span class="tw-text-black-800">Bewerken</span>
+          </v-btn>
+          <v-btn
+            v-if="!isOwner"
             class="tw-capitalize tw-mr-8"
             color="white"
           >
@@ -27,6 +36,7 @@
             <span class="tw-text-black-800">Delen</span>
           </v-btn>
           <v-btn
+            v-if="!isOwner"
             class="tw-capitalize"
             :color="locationIsFavorited(location.id) ? 'red lighten-2' : 'white'"
             @click="toggleFavorite(location.id);"
@@ -45,19 +55,72 @@
           </v-btn>
         </div>
       </div>
-      <v-layout wrap align-center class="tw--m-8 tw-pt-32">
+      <v-layout wrap align-center class="tw--m-24 tw-pt-32">
         <v-flex
-          class="tw-p-8"
+          class="tw-p-32 tw-self-start"
           sm12
           md8
         >
-          <div class="tw-w-full">
-            <h1 class="tw-w-full tw-text-4xl tw-font-bold">{{ location.title }}</h1>
-            <AttendeesLabel v-if="location.attendees > 0" :attendees="location.attendees" />
-          </div>
+          <v-layout row wrap>
+            <div class="tw-w-full tw-mt-24 tw-relative">
+              <h1 class="tw-w-full tw-text-4xl tw-font-bold">{{ location.title }}</h1>
+              <AttendeesLabel :attendees="50" />
+              <v-avatar
+                class="tw-absolute tw-right-0 tw-top-0 tw-cursor-pointer"
+                :width="64"
+                :height="64"
+                :min-width="64"
+                :min-height="64"
+              >
+                <NuxtLink to="#host">
+                  <img
+                    v-if="location.user.avatar"
+                    class="tw-object-cover"
+                    :src="location.user.avatar"
+                    alt="John"
+                  >
+                  <div class="tw-bg-gray-100 tw-w-full tw-h-full">
+                    <v-icon v-if="!location.user.avatar" class="tw-text-2xl tw-mb-4 tw-pb-2 tw-text-gray-500">mdi-account</v-icon>
+                  </div>
+                </NuxtLink>
+              </v-avatar>
+            </div>
+            <div class="tw-w-full tw-border-t-2 tw-border-black-200 tw-py-32 tw-my-32">
+              <read-more more-str="lees meer" :text="msg" link="#" less-str="lees minder" :max-chars="400"></read-more>
+            </div>
+            <div id="#host" class="tw-w-full tw-border-t-2 tw-border-black-200 tw-py-32">
+              <div class="tw-flex tw-w-full">
+                <v-avatar
+                  class="tw-shrink tw-cursor-pointer"
+                  :width="64"
+                  :height="64"
+                  :min-width="64"
+                  :min-height="64"
+                >
+                  <NuxtLink to="#host">
+                    <img
+                      v-if="location.user.avatar"
+                      class="tw-object-cover"
+                      :src="location.user.avatar"
+                      alt="John"
+                    >
+                    <div class="tw-bg-gray-100 tw-w-full tw-h-full">
+                      <v-icon v-if="!location.user.avatar" class="tw-text-2xl tw-mb-4 tw-pb-2 tw-text-gray-500">mdi-account</v-icon>
+                    </div>
+                  </NuxtLink>
+                </v-avatar>
+                <div class="tw-pl-32 tw-self-center tw-w-full">
+                  <h2 class="tw-text-3xl tw-font-bold">Aangeboden door {{ location.user.first_name }}</h2>
+                  <p class="tw-text-gray-800 tw-text-lg">Lid sinds november 2016</p>
+                </div>
+                
+                
+              </div>
+            </div>
+          </v-layout>
         </v-flex>
         <v-flex
-          class="tw-p-8"
+          class="tw-p-24"
           sm12
           md4
         >
@@ -111,34 +174,33 @@
   import { User } from '@/models/User';
 
   @Component<LocationDetail>({
-    // async asyncData({ $axios }) {
-    //   const ip = await $axios.$get('http://icanhazip.com')
-    //   return { ip }
-    // }
-    // head(this: provinceLocations): object {
-    //   return {
-    //       province: '',
-    //       title: this.pageTitle,
-    //       meta: [
-    //           // hid is used as unique identifier. Do not use `vmid` for it as it will not work
-    //           { hid: 'description', name: 'description', content: 'My custom description' }
-    //       ]
-    //   };
-    // }
+    async fetch() {
+      await this.getLocation();
+      this.pageTitle = this.location?.title || '';
+    },
+    head(this: LocationDetail): object {
+      return {
+          title: this.pageTitle,
+          meta: [
+              // hid is used as unique identifier. Do not use `vmid` for it as it will not work
+              { hid: 'description', name: 'description', content: 'My custom description' }
+          ]
+      };
+    }
   })
   export default class LocationDetail extends Vue {
+    protected pageTitle = '';
+
     protected location: Location | null = null;
 
     protected isLoading = true;
 
     protected showImageSlider = false;
 
-    protected async mounted(): Promise<void> {
-      await this.getLocation();
-    }
+    protected msg = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non ligula ipsum. Suspendisse eget commodo ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In tempus nisi a justo interdum, eu tristique lacus tincidunt. Vivamus quis massa imperdiet, pellentesque massa mollis, bibendum tellus. Duis hendrerit erat id erat finibus ornare. Aliquam tincidunt iaculis dolor non hendrerit. Mauris facilisis fermentum mauris ac pellentesque. Vivamus gravida orci pellentesque purus finibus mollis vel consequat erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque tincidunt libero nec lorem porta luctus. Duis sit amet massa urna. Donec pulvinar, leo et eleifend congue, risus dolor sodales dui, vel vestibulum lorem odio in turpis. Aenean rhoncus nunc mauris, quis rhoncus augue volutpat a.<br><br>Praesent consectetur aliquam elementum. Suspendisse euismod molestie faucibus. Cras non est in lectus sollicitudin congue vel pulvinar risus. Pellentesque quis pulvinar ex. Donec vulputate dignissim ligula in vestibulum. Fusce nunc odio, rhoncus vitae mattis in, tempus vel ligula. Pellentesque non neque ac risus molestie ultrices. Pellentesque laoreet lectus sed libero sodales, ornare eleifend elit finibus.';
 
     protected async getLocation(): Promise<void> {
-      await new Location().find(this.$route.params.id)
+      await new Location().include('user').find(this.$route.params.id)
             .then((location: Location) => {
               this.location = location;
               this.isLoading = false;
@@ -184,7 +246,11 @@
     }
 
     protected get user(): User {
-        return this.$store.getters.loggedInUser;
+      return this.$store.getters['Auth/loggedInUser'];
+    }
+
+    protected get isOwner(): boolean {
+      return this.location?.user?.id === this.user?.id;
     }
 
     protected get savedLocationsIds(): string[] {
