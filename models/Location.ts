@@ -33,10 +33,9 @@ export interface createPayload {
   title?: string;
   description?: string;
   images?: string[];
-  daypart_rent_only?: boolean;
-  price_per_hour?: string;
-  price_per_daypart?: string;
   capacity?: number;
+  price_per_hour?: number;
+  min_rent_time_hours?: number;
 }
 
 export interface locationImagePayload {

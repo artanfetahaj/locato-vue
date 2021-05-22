@@ -5,6 +5,9 @@ import Currency from '@/support/Currency';
 import { formatSQLDate } from '@/support/Date';
 import { DateTime } from 'luxon';
 import { concatenate } from '@/support/String';
+import { Settings } from 'luxon'
+ 
+Settings.defaultLocale = 'nl'
 
 Vue.filter('currency', (value: any) => {
   return Currency(value);

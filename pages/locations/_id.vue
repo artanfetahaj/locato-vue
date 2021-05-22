@@ -24,7 +24,7 @@
             class="tw-capitalize tw-mr-8"
             color="white"
           >
-            <v-icon class="tw-text-lg tw-mr-4 tw-text-black-800">mdi-pencil</v-icon>
+            <v-icon class="tw-text-lg tw-mr-8 tw-text-black-800">mdi-pencil</v-icon>
             <span class="tw-text-black-800">Bewerken</span>
           </v-btn>
           <v-btn
@@ -80,7 +80,7 @@
                     alt="John"
                   >
                   <div class="tw-bg-gray-100 tw-w-full tw-h-full">
-                    <v-icon v-if="!location.user.avatar" class="tw-text-2xl tw-mb-4 tw-pb-2 tw-text-gray-500">mdi-account</v-icon>
+                    <v-icon v-if="!location.user.avatar" class="tw-text-6xl tw-p-16 tw-mb-4 tw-text-gray-500">mdi-account</v-icon>
                   </div>
                 </NuxtLink>
               </v-avatar>
@@ -105,7 +105,7 @@
                       alt="John"
                     >
                     <div class="tw-bg-gray-100 tw-w-full tw-h-full">
-                      <v-icon v-if="!location.user.avatar" class="tw-text-2xl tw-mb-4 tw-pb-2 tw-text-gray-500">mdi-account</v-icon>
+                      <v-icon v-if="!location.user.avatar" class="tw-text-6xl tw-p-16 tw-mb-4 tw-text-gray-500">mdi-account</v-icon>
                     </div>
                   </NuxtLink>
                 </v-avatar>
@@ -120,7 +120,7 @@
           </v-layout>
         </v-flex>
         <v-flex
-          class="tw-p-24"
+          class="tw-p-24 tw-self-start"
           sm12
           md4
         >
@@ -175,8 +175,15 @@
 
   @Component<LocationDetail>({
     async fetch() {
-      await this.getLocation();
-      this.pageTitle = this.location?.title || '';
+      try {
+        this.location = await this.getLocation()
+        this.isLoading = false;
+      } catch (error) {
+        console.log(error)
+      }
+      
+      
+      // this.pageTitle = this.location?.title || '';
     },
     head(this: LocationDetail): object {
       return {
@@ -199,13 +206,8 @@
 
     protected msg = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Vivamus non ligula ipsum. Suspendisse eget commodo ex. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia curae; In tempus nisi a justo interdum, eu tristique lacus tincidunt. Vivamus quis massa imperdiet, pellentesque massa mollis, bibendum tellus. Duis hendrerit erat id erat finibus ornare. Aliquam tincidunt iaculis dolor non hendrerit. Mauris facilisis fermentum mauris ac pellentesque. Vivamus gravida orci pellentesque purus finibus mollis vel consequat erat. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Pellentesque tincidunt libero nec lorem porta luctus. Duis sit amet massa urna. Donec pulvinar, leo et eleifend congue, risus dolor sodales dui, vel vestibulum lorem odio in turpis. Aenean rhoncus nunc mauris, quis rhoncus augue volutpat a.<br><br>Praesent consectetur aliquam elementum. Suspendisse euismod molestie faucibus. Cras non est in lectus sollicitudin congue vel pulvinar risus. Pellentesque quis pulvinar ex. Donec vulputate dignissim ligula in vestibulum. Fusce nunc odio, rhoncus vitae mattis in, tempus vel ligula. Pellentesque non neque ac risus molestie ultrices. Pellentesque laoreet lectus sed libero sodales, ornare eleifend elit finibus.';
 
-    protected async getLocation(): Promise<void> {
-      await new Location().include('user').find(this.$route.params.id)
-            .then((location: Location) => {
-              this.location = location;
-              this.isLoading = false;
-            })
-            .catch((error: any) => console.log(error));
+    protected async getLocation(): Promise<Location> {
+      return await new Location().include('user').find(this.$route.params.id);
     }
 
     protected showAuthModal(): void {
